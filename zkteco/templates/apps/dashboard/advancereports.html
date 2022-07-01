@@ -1,0 +1,58 @@
+{% extends "main.html" %}
+{% load static %}
+{% load helpers_tags %}
+{% block pageHeader %}
+<!-- <div class="page-header">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="page-title">Dashboard</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">All Employees</li>
+            </ul>
+        </div>
+    </div>
+</div> -->
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Employees Advance report until | <b>{% now " F - Y"  %}</b> Last 1000 records</h4>
+            <p class="card-text">
+                All Employees earnings months of <b>{% now " F - Y"  %}</b>  until <b>{% now "jS M " %}</b> 
+            </p>
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="datatable table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Employee</th>
+                            <th>Month</th>
+                            <th>Advance Amout</th>                            
+                            <th>Time</th>
+                        </tr>
+                       
+                    </thead>
+                    <tbody>
+                         {% for advance in advances %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{% get_username_from_userid advance.employee_id %}</td>
+                                <td>{{ advance.month }}</td>
+                                <td>{{ advance.advanceamount }}</td>
+                                <td>{{ advance.paidtime }}</td>
+                            </tr>
+                         {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+ 

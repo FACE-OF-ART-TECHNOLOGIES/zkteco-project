@@ -1,0 +1,4 @@
+#For micorsoft sql server
+#install odbc driver 17
+#microsoft sql server
+#microsoft sql studio

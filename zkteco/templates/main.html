@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    {% include "header.html" %}
+    <body>
+	
+		<!-- Main Wrapper -->
+        <div class="main-wrapper">
+		
+			<!-- Header -->
+			{% include "navbar.html" %}
+			<!-- /Header -->
+			
+			<!-- Sidebar -->
+			{% include "sidebar.html" %}
+			<!-- /Sidebar -->
+			
+			
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+                <div class="content container-fluid">
+                    
+					<!-- Page Header -->
+                    {% block pageHeader %}
+                        <!-- Page header goes here -->
+                    {% endblock %}
+				
+					<!-- /Page Header -->
+					
+					<div class="row">
+						 
+							{% block content %}
+                                <!-- Page content goes here -->
+                            {% endblock %}
+					 		
+					</div>
+					
+				</div>			
+			</div>
+			<!-- /Page Wrapper -->
+		
+        </div>
+		<!-- /Main Wrapper -->
+		
+	{% include "footer.html" %}
+
+	</body>
+</html>

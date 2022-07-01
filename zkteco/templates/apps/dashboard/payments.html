@@ -1,0 +1,104 @@
+{% extends "main.html" %}
+{% load static %}
+{% load helpers_tags %}
+{% block pageHeader %}
+<!-- <div class="page-header">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="page-title">Dashboard</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">All Employees</li>
+            </ul>
+        </div>
+    </div>
+</div> -->
+{% endblock %}
+
+{% block content %}
+<script>
+    function getTotalHour(user_id){
+        //console.log("User Id: " + user_id)
+        var target = document.getElementById("th-" + user_id);
+        target.innerHTML ="Calculating..."
+        axios.get('/api/totalworkinghour?id=' + user_id).then( (res) => {
+           // console.log('Axios: ' , res.data.hour)
+            target.innerHTML = res.data.hour + ' hours'
+        })
+    }
+
+    function getTotalOvertime(user_id){
+        var target = document.getElementById("to-" + user_id)
+        target.innerHTML = "Calculating..."
+
+        axios.get('/api/totalapiovertimehour?id=' + user_id).then((res) => {
+           console.log('Overtime: ' + res.data.hour)
+            target.innerHTML = res.data.hour + ' hours'
+        })
+    }
+    function getTotalEarnings(user_id){
+        var target = document.getElementById("te-" + user_id)
+        target.innerHTML = "Calculating..."
+
+        axios.get('/api/totalapimonthlyEarnings?id=' + user_id).then((res) => {
+           // console.log('Overtime: ' + res.data.hour)
+            target.innerHTML = res.data.earnings + ' Taka'
+        })
+    }
+    {% comment %} Pay now event {% endcomment %}
+    function payNowEvent(user_id){
+        {% comment %} location.reload() {% endcomment %}
+        location.href = "/goto/"+user_id;
+    }
+</script>
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Salary Details</h4>
+            <p class="card-text">
+                All Employees Salary Informaiton of  <b>{% now " F - Y"  %}</b>
+            </p>
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="datatable table table-striped" onload="workerfunction();">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Employee</th>
+                            <th>Basic Salary</th>
+                            <th>Working Hour</th>
+                            <th>Overtime</th>
+                            <th>Total Income</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                       
+                    </thead>
+                    <tbody>
+                        {% for details in salaries %}
+                            <tr name="totalhour" tuser="{{details.employee_id}}" >
+                              
+                                <td>{{ forloop.counter }}</td>
+                                <td>{% get_username_from_userid details.employee_id %}</td>
+                                <td>{{ details.salary }} BDT</td>
+                                <td id="th-{{details.employee_id}}">Calculating<script>getTotalHour({{details.employee_id}})</script></td>
+                                <td id="to-{{details.employee_id}}">Calculating..<script>getTotalOvertime({{details.employee_id}})</script></td>
+                                <td id="te-{{details.employee_id}}">Calculating..<script>getTotalEarnings({{details.employee_id}})</script> Taka</td>
+                                <td>Not Paid</td>
+                                  {% comment %} <td><a  href="/pay?id={{details.employee_id}}">Pay Now</a></td> {% endcomment %}
+                                  <td><button onclick="payNowEvent({{details.employee_id}})">Pay Now</button></td>
+                                
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+ 
+{% comment %} Hmm their is a problem loading javascript in a block  {% endcomment %}

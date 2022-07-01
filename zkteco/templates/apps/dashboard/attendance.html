@@ -1,0 +1,78 @@
+{% extends "main.html" %}
+{% load static %}
+{% load helpers_tags %}
+{% block pageHeader %}
+<!-- <div class="page-header">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="page-title">Dashboard</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">All Employees</li>
+            </ul>
+        </div>
+    </div>
+</div> -->
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Attendance Details</h4>
+            <p class="card-text">
+                All Employees Attendance Informaiton
+            </p>
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="datatable table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Employee</th>
+                            <th>Date</th>
+                            <th>Check In</th>
+                            <th>Check Out</th>
+                            <th>Working Hour</th>
+                            <th>Overtime</th>
+                        </tr>
+                       
+                    </thead>
+                    <tbody>
+                        {% for details in dailydetails %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{% get_username_from_userid details.employee_id %}</td>
+                                <td>{{ details.att_date|date:"M d, Y - l" }}</td>
+                                <td>
+                                    {% if details.checkin %}
+                                        <!-- {{ details.checkin|date:"M d, Y - g:i:s A" }} -->
+                                        {{ details.checkin|date:"g:i:s A" }}
+                                    {% else %}
+                                        <p style="color:red">Absent</p>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if details.checkin %}
+                                        {% autoescape off %}
+                                            {% get_checkout_time details.employee_id details.att_date details.checkin %} 
+                                        {% endautoescape %}
+                                    
+                                    {% else %} 
+                                        <p style="color:red">Absent</p>
+                                    {% endif %}
+                                </td>
+                                <td>{% today_working_hour details.employee_id details.att_date  %}</td>
+                                <td>{% getTodaysOverTime details.employee_id details.att_date  %}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+ 

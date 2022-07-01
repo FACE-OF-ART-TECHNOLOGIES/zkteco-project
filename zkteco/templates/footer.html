@@ -1,0 +1,63 @@
+    {% load static %}
+    <!-- jQuery -->
+    <script src='{% static "js/jquery-3.6.0.min.js" %}'></script>
+		
+    <!-- Bootstrap Core JS -->
+    <script src='{% static "js/popper.min.js" %}'></script>
+    <script src='{% static "js/bootstrap.min.js" %}'></script>
+    
+    <!-- Feather Icon JS -->
+    <script src='{% static "js/feather.min.js" %}'></script>
+    
+    <!-- Slimscroll JS -->
+    <script src='{% static "plugins/slimscroll/jquery.slimscroll.min.js" %}'></script>
+    <!-- Apexchart JS -->
+    <!-- <script src='{% static "plugins/apexchart/apexcharts.min.js" %}'></script>
+    <script src='{% static "plugins/apexchart/chart-data.js" %}'></script> -->
+
+    <script src='{% static "plugins/datatables/jquery.dataTables.min.js" %}'></script>
+	<script src='{% static "plugins/datatables/datatables.min.js" %}'></script>
+   
+        
+    {% block footerLibrary %} {% endblock %}
+    <!-- Custom JS -->
+    <script src='{% static "js/script.js" %}'></script>
+
+
+
+    {% comment %} Now it is showing alert {% endcomment %}
+    <script>
+        {% comment %} I don't want to run this block every time it's will only run when i am in payment route {% endcomment %}
+        {% comment %} $( document ).ready(function() {
+             console.log("Welcome")
+             var rows = document.getElementsByName("totalhour")
+
+             for row in rows {
+                 var userid = row.getAttribute("tuser")
+                 console.log("User Id: " + userid)
+             }
+          });
+
+          {% endcomment %}
+          {% comment %} Ok let's try another way {% endcomment %}
+          {% comment %} Seems like easy but it's not {% endcomment %}
+          
+          toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+          }
+    </script>
+ 

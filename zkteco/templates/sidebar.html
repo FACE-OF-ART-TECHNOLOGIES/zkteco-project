@@ -1,0 +1,41 @@
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="menu-title"><span>Main</span></li>
+                <li>
+                    <a href="{% url 'statistics' %}"><i data-feather="home"></i> <span> Statistics</span></a>
+                </li>
+                <li>
+                    <a href="{% url 'dashboard' %}"><i data-feather="home"></i> <span> Employees</span></a>
+                </li>
+                <li>
+                    <a href="{% url 'attendance' %}"><i data-feather="users"></i> <span>Daily Attendance</span></a>
+                </li>
+                 
+          
+                <li class="submenu">
+                    <a href="#"><i data-feather="pie-chart"></i> <span> Salary</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'salary' %}">Salaries</a></li>
+                        <li><a href="{% url 'salaryreports' %}">Salary Reports</a></li>
+                        <li><a href="{% url 'advancereports' %}">Advance Records</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="#"><i data-feather="pie-chart"></i> <span> Accounts</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'payments' %}">Employees Earnings</a></li>
+                        <li><a href="{% url 'pay' %}?id=1">Pay Salary</a></li>
+                        <li><a href="{% url 'salaryreports' %}">Salary Paid report</a></li>
+                        <li><a href="{% url 'advancereports' %}">Advance Records</a></li>
+                        <li><a href="{% url 'advancepayments' %}">Advance Payment</a></li>
+                    </ul>
+                </li>
+                
+                
+                 
+            </ul>
+        </div>
+    </div>
+</div>

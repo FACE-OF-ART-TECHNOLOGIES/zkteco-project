@@ -1,0 +1,59 @@
+{% extends "main.html" %}
+{% load static %}
+{% block pageHeader %}
+<!-- <div class="page-header">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="page-title">Dashboard</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">All Employees</li>
+            </ul>
+        </div>
+    </div>
+</div> -->
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">All Employees</h4>
+            <p class="card-text">
+                All Employees Informaiton
+            </p>
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="datatable table table-stripped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for employee in employees %}
+                        <tr>
+                            <td>{{ employee.id }}</td>
+                            <td>{{ employee.emp_firstname }} {{ employee.emp_lastname }}</td>
+                            <td>
+                                {% if employee.emp_active == 1 %}
+                                    Active
+                                {% else %}
+                                    InActive
+                                {% endif %}
+                            </td>
+                             
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+ 

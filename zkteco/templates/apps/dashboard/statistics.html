@@ -1,0 +1,75 @@
+{% extends "main.html" %}
+{% load static %}
+{% load helpers_tags %}
+{% block pageHeader %}
+<!-- <div class="page-header">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="page-title">Dashboard</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">All Employees</li>
+            </ul>
+        </div>
+    </div>
+</div> -->
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Statistics</h4>
+            <p class="card-text">
+                Statistics
+            </p>
+        </div>
+       
+    </div>
+    <div class="row">
+					
+        <!-- Alert -->
+        <div class="col-md-4">	
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Total Employees</div>
+                </div>
+                <div class="card-body">
+                     <h1> {{totalemployee}} Employees</h1> 
+                </div>
+            </div>
+        </div>
+        <!-- /Alert -->
+        
+        <!-- Alert -->
+        <div class="col-md-4">	
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Total Advance Paid</div>
+                </div>
+                <div class="card-body">
+                    <h1>{{advancepaid}} Taka</h1> 
+                </div>
+            </div>
+        </div>
+        <!-- /Alert -->
+        
+        <!-- Alert -->
+        <div class="col-md-4">	
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Total Salary Paid</div>
+                </div>
+                <div class="card-body">
+                     <h1>{{salarypaid}} Taka</h1>
+                </div>
+            </div>
+        </div>
+        <!-- /Alert -->
+        
+        
+        
+    </div>
+</div>
+{% endblock %}
+ 

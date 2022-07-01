@@ -1,0 +1,215 @@
+{% extends "main.html" %}
+{% load static %}
+{% load helpers_tags %}
+{% block pageHeader %}
+
+{% endblock %}
+
+{% block content %}
+<style>
+    #c2 {
+        animation: cssAnimation 0s 5s forwards;
+        visibility: hidden;
+      }
+      
+    @keyframes cssAnimation {
+        to   { visibility: visible; }
+    }
+
+    #c3 {
+        animation: cssAnimation 0s 10s forwards;
+        visibility: hidden;
+    }
+    
+    @keyframes cssAnimation {
+        to   { visibility: visible; }
+    }
+
+    #c4 {
+        animation: cssAnimation 0s 15s forwards;
+        visibility: hidden;
+    }
+    
+    @keyframes cssAnimation {
+        to   { visibility: visible; }
+    }
+
+    #c5 {
+        animation: cssAnimation 0s 20s forwards;
+        visibility: hidden;
+    }
+    
+    @keyframes cssAnimation {
+        to   { visibility: visible; }
+    }
+</style>
+<script>
+    
+
+    // Global Variables can use different functions
+    let workingHour = 0
+    let overtime = 0
+    let baseSalary = 0
+    let totalPayble = 0
+    let advanceaid = 0
+    let totalEarnings = 0
+    let isPaid = false
+    let paidTime = ''
+
+    axios.get("/payapi/?id=" + {{ id }}).then(res => {
+        if (res.status == '200') {
+            // Filing up variables
+            workingHour = res.data.totalworkinghour
+            overtime = res.data.totalovertime
+            baseSalary = res.data.baseSalary
+            totalPayble = res.data.totalpayable
+            advanceaid = res.data.advancepaid
+            totalEarnings = res.data.totalearnings
+            isPaid = res.data.ispaid
+            paidtime = res.data.paidtime
+
+            // Showing on the web
+            document.getElementById("floader").style.display = "none"
+            document.getElementById("maindata").removeAttribute("hidden")
+
+            // Disabling mark as pay button
+            if(isPaid == true)
+                document.getElementById('paybtn').style.visibility = 'hidden'
+            // Showing marked as paid Alert
+            if(isPaid == true)
+                document.getElementById('salarypaidinfo').style.removeProperty('display')
+                document.getElementById('paidtimestring').innerHTML = paidtime
+            
+            document.getElementById("advp").innerHTML = res.data.advancepaid
+            document.getElementById("tp").innerHTML = res.data.totalpayable
+            document.getElementById("ms").innerHTML = res.data.baseSalary
+            document.getElementById("te").innerHTML = res.data.totalearnings
+            document.getElementById("wh").innerHTML = res.data.totalworkinghour
+            document.getElementById("oh").innerHTML = res.data.totalovertime
+
+
+        }
+        console.log(res.data)
+    })
+ 
+    function goback(){
+        window.history.back('/payments/')
+    }
+
+    function salaryPay(empid){
+
+        result = {
+            empid: empid,
+            totalpaybleamountrcv: totalPayble,
+            workinghour: workingHour,
+            overtime: overtime,
+            advancetaken: advanceaid,
+            basesalary: baseSalary,
+            earnings: totalEarnings,
+        }
+
+        console.log("Result: ", result)
+        
+          $.post("/api/marksalarypaid/",result,
+            function(data, status){
+                console.log(data)
+                if(data.status == 'success'){
+                    console.log("Paid request completed!")
+                    document.getElementById('paybtn').style.visibility = 'hidden'
+                    document.getElementById('spaid').style.removeProperty('display')
+                }
+            });
+    }
+ 
+    function goNext(){
+        const params = new URLSearchParams(window.location.search)
+        getId = params.get('id')
+        window.location.href = "/pay/?id=" + (parseInt(getId) + 1)
+    }
+   
+</script>
+<div class="col-sm-12">
+    <div class="card">
+          <div class="card-header">
+            <button onclick="goback()" class="btn btn-sm btn-dark text-white mb-3"><i class="fa fa-backward"></i> Go to Previous Page</button>
+            <h4 class="card-title">Accounts</h4>
+            <p class="card-text">
+                Salary Payment
+            </p>
+            
+        </div>
+        <div class="card-body">
+            <div class="card">
+
+                <div id="floader">
+                    <div class="card-body">
+
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm">
+                                    <h6 class="text-left" style="color:green;"><i class="fa fa-clock"> </i>
+                                        Calculating
+                                        total Hours for <strong>{% get_username_from_userid id %}<strong> </h6>
+                                    <h6 id="c2" style="color:green;"><i class="fa fa-clock"> </i> Calculating
+                                        total
+                                        Overtime for <strong>{% get_username_from_userid id %}<strong> </h6>
+                                    <h6 id="c3" style="color:green;"><i class="fa fa-clock"> </i> Getting base
+                                        Salary of <strong>{% get_username_from_userid id %}<strong> </h6>
+                                    <h6 id="c4" style="color:green;"><i class="fa fa-clock"> </i> Getting total
+                                        advance taken by <strong>{% get_username_from_userid id %}<strong> </h6>
+                                    <h6 id="c5" style="color:green;"><i class="fa fa-clock"> </i> Calulating
+                                        Payble
+                                        amount <strong>{% get_username_from_userid id %}<strong> </h6>
+
+                                </div>
+                                 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="maindata" hidden>
+                    <div class="col-md-6">
+                        <h5>{% get_username_from_userid id %}</h5>   
+                        <hr>
+                        <h6 style="color:#ff4000;">Advance Paid: <span id="advp"></span> Taka
+                        </h6>
+                        <h6 style="color:green;">Total Payable: <span id="tp"></span> Taka</h6>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 style="color:blue;">Monthly Salary: <span id="ms"></span> Taka</h6>
+                        <hr>
+                        <h6>Working Hour: <span id="wh"></span>  Hours</h6>
+                        <h6>Overtime: <span id="oh"></span> Hours</h6>
+                        <h6 style="color:purple;">Total Earnings: <span id="te"></span> Taka</h6>
+                    </div>
+                    <center>
+                        {% csrf_token %}
+                        <div id="salarypaidinfo" style="display:none;">
+                            <div class="alert alert-success mt-5" role="alert">
+                                Salary already Paid at <span id="paidtimestring"></span>
+                              </div>
+                        </div>
+                        <div id="spaid" style="display:none;">
+                            <div class="alert alert-success mt-5" role="alert">
+                                Salary marked as paid
+                              </div>
+                        </div>
+                        <button id="paybtn" class="btn btn-info text-white mt-5" onclick=salaryPay({{id}}) type="button"><i class="fa fa-check"> </i> Mark as Paid</button>
+                    </center>
+                </div>
+                <button onclick="goNext()" class="btn btn-sm btn-primary text-white ml-5"> Next Employee <i class="fa fa-forward"></i>  </button>
+  
+            </div>
+            
+        </div>
+    </div>
+     
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+    
+</script>
+{% endblock %}

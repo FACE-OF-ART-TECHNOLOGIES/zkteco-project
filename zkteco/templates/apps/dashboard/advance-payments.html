@@ -1,0 +1,62 @@
+{% extends "main.html" %}
+{% load static %}
+{% load helpers_tags %}
+{% block pageHeader %}
+<!-- <div class="page-header">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="page-title">Dashboard</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">All Employees</li>
+            </ul>
+        </div>
+    </div>
+</div> -->
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Advance Payment</h4>
+            <p class="card-text">
+                Employees Advance
+            </p>
+        </div>
+        {% if success %}
+            <div class="alert alert-success" role="alert">
+                {{success}}
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{error}}
+            </div>
+        {% endif %}
+
+        <div class="card-body">
+
+            <form action="{% url 'advancepayments' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="selemp">Select Employee</label>
+                  <select name="employee" class="form-control" id="exampleFormControlSelect1">
+                   {% for employee in employees %}
+                    <option value={{employee.id}}>{% get_username_from_userid employee.id %}</option>
+                   {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="amount">Amount</label>
+                  <input type="number" name="amount" class="form-control" id="amount" placeholder="0">
+                </div>
+                 
+                <button type="submit" class="btn btn-primary">Pay Advance</button>
+              </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+ 

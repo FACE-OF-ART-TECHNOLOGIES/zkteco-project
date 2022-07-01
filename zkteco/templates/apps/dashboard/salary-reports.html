@@ -1,0 +1,75 @@
+{% extends "main.html" %}
+{% load static %}
+{% load helpers_tags %}
+{% block pageHeader %}
+<!-- <div class="page-header">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="page-title">Dashboard</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">All Employees</li>
+            </ul>
+        </div>
+    </div>
+</div> -->
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Employees Earnings | <b>{% now " F - Y"  %}</b></h4>
+            <p class="card-text">
+                All Employees earnings months of <b>{% now " F - Y"  %}</b>  until <b>{% now "jS M " %}</b> 
+            </p>
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="datatable table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Employee</th>
+                            <th>Month</th>
+                            <th>Basic Salary</th>
+                            <th>Working Hours</th>
+                            <th>Overtime HOurs</th>
+                            <th>Total Earnings</th>
+                            <th>Advance Taken</th>
+                            <th>Paid Amount</th>
+                            <th>Time</th>
+                        </tr>
+                       
+                    </thead>
+                    <tbody>
+                         {% for record in records %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{% get_username_from_userid record.employee_id %}</td>
+                                <td>{{ record.month }}</td>
+                                <td>{{ record.baseSalary }} Taka</td>
+                                <td>{{ record.workinghours }} Hours</td>
+                                <td>{{ record.overtimehours }} Hours</td>
+                                <td style="color:blue">{{ record.totalEarnings }} Taka</td>
+                                <td>
+                                    {% if record.advanceTaken > 0 %}
+                                        <span style="color:red;">{{ record.advanceTaken }}</span>
+                                    {% else %}
+                                        {{ record.advanceTaken }}
+                                    {% endif %}
+                                    Taka</td>
+                                <td style="color:green">{{ record.paidamount }} Taka</td>
+                                <td> {{ record.paidtime }} </td>
+                                 
+                            </tr>
+                         {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+ 
