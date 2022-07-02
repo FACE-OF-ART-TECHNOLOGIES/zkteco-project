@@ -8,9 +8,9 @@ from datetime import date, timedelta
 
 from appuser.api_functions import apifun_getTodayHourAndOverTime, apifun_getTotalOvertimeMin, apifun_getTotalWorkingMin, \
     apifun_monthlyEarnings
-from .models import EmployeeAdvancePayment, EmployeeSalaryPaments, HrEmployee, AttDayDetails, NewAppSalary
+from .models import USERINFO, EmployeeAdvancePayment, EmployeeSalaryPaments, HrEmployee, AttDayDetails, NewAppSalary, CHECKINOUT
 
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from .extra_functions import getCurrentMonth, getLastMonth
 from django.views.decorators.csrf import csrf_exempt
 
@@ -326,3 +326,33 @@ def advancereports(request):
     advances = EmployeeAdvancePayment.objects.all()[0:1000]
 
     return render(request, 'apps/dashboard/advancereports.html', {'advances': advances})
+
+
+from django.db import connections
+
+def fetch_data(request):
+
+    # sql = 'Select * From USERINFO'
+    # with connections['machine'].cursor() as cursor:
+
+    #     cursor.execute(sql)
+    #     row = cursor.fetchall()
+
+    #     print(row)
+    user_info_all = USERINFO.objects.using('machine').all()
+    return HttpResponse(user_info_all)
+
+@login_required
+def check_time(request):
+    all_user_checkInOut = CHECKINOUT.objects.using('machine').all()
+    user_unique = set()
+    for u in all_user_checkInOut:
+        user_unique.add(u.USERID)
+    
+    context = {
+        'all_user_checkInOut': all_user_checkInOut
+    }
+    return render(request, 'apps/dashboard/check-in-out.html', context)
+
+
+

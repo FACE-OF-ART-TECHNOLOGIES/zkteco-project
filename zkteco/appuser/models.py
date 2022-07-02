@@ -6,6 +6,7 @@ from django.utils import tree
 # Create your models here.
 class HrEmployee(models.Model):
     id = models.AutoField(primary_key=True)
+    rf_id = models.CharField(max_length=100, verbose_name='RFID number', null=True, blank=True)
     emp_pin = models.TextField()
     emp_ssn = models.TextField(blank=True, null=True)
     emp_role = models.TextField(blank=True, null=True)
@@ -178,3 +179,29 @@ class EmployeeAdvancePayment(models.Model):
     def __str__(self):
         return self.employee.emp_firstname + " " + self.employee.emp_lastname + " Amount: " + str(
             self.advanceamount) + " BDT"
+
+
+class USERINFO(models.Model):
+    USERID = models.IntegerField(primary_key=True)
+    BADGENUMBER = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table='USERINFO'
+
+    def __str__(self):
+        return self.BADGENUMBER
+
+
+class CHECKINOUT(models.Model):
+    CHECKTIME = models.DateTimeField()
+    CHECKTYPE = models.CharField(max_length=100)
+    USERID = models.IntegerField(primary_key=True)
+    
+    class Meta:
+        managed = False
+        db_table = 'CHECKINOUT'
+
+    
+
+

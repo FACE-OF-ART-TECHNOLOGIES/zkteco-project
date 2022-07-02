@@ -1,0 +1,68 @@
+{% extends "main.html" %}
+{% load static %}
+{% load helpers_tags %}
+{% block pageHeader %}
+<!-- <div class="page-header">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="page-title">Dashboard</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">All Employees</li>
+            </ul>
+        </div>
+    </div>
+</div> -->
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Check In Out</h4>
+            <p class="card-text">
+                All Employees Check In Out Informaiton
+            </p>
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="datatable table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>UserID</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Check In</th>
+                            <th>Check Out</th>
+                            <th>Working Hour</th>
+                            <th>Overtime</th>
+                        </tr>
+                       
+                    </thead>
+                    <tbody>
+                        {% for details in all_user_checkInOut %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ details.USERID  }}</td>
+                                <td>{{ details.CHECKTIME }}</td>
+                                <td></td>
+                                <td>
+                                   
+                                </td>
+                                <td>
+                                    
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+ 

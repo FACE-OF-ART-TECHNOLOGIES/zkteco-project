@@ -81,16 +81,28 @@ WSGI_APPLICATION = 'attendance.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'pacificdb',
-        'USER': 'adminks',
-        'PASSWORD': 'adminks',
-        'HOST': 'KS-PC\SQLEXPRESS',
+        'NAME': 'pacifica1web',
+        'USER': 'pacificadmin',
+        'PASSWORD': 'pacific@1234',
+        'HOST': 'WIN-A4U2O3INACO',
         'PORT': '',
 
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
         },
     },
+    'machine': {
+        'ENGINE': 'mssql',
+        'NAME': 'pacifica1',
+        'USER': 'pacificadmin',
+        'PASSWORD': 'pacific@1234',
+        'HOST': 'WIN-A4U2O3INACO',
+        'PORT': '',
+
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+        },
+    }
 }
 
 # set this to False if you want to turn off pyodbc's connection pooling

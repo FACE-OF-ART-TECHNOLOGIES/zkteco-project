@@ -19,5 +19,7 @@ urlpatterns = [
     path('advancereports/', views.advancereports, name="advancereports"),
     path('api/totalworkinghour/', views.totalapiworkinghour, name="apitotalworkinghour"),
     path('api/totalapiovertimehour/', views.totalapiovertimehour, name="totalapiovertimehour"),
-    path('api/totalapimonthlyEarnings/', views.totalapimonthlyEarnings, name="totalapimonthlyEarnings")
+    path('api/totalapimonthlyEarnings/', views.totalapimonthlyEarnings, name="totalapimonthlyEarnings"),
+    path('fetch_data/', views.fetch_data, name="fetch_data"),
+    path('check_time/', views.check_time, name="check_time")
 ]
