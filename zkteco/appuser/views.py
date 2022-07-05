@@ -375,37 +375,42 @@ def check_time(request):
         sel_date = request.POST['sel_date']
         for em in hr_employee_all:
             if em.rf_id != '0':
-                em_user_info = USERINFO.objects.using(
-                    'machine').get(BADGENUMBER=em.rf_id)
+                try:
+                    em_user_info = USERINFO.objects.using(
+                        'machine').get(BADGENUMBER=em.rf_id)
+                except USERINFO.DoesNotExist:
+                    pass
+            
                 # single_checkInOut = CHECKINOUT.objects.using('machine').filter(date_form=date_form.search_Day, USERID=em_user_info.USERID).order_by('CHECKTIME')
                 # print(single_checkInOut)
                 # em_checkInOut_final = []
-                em_checkInOut = CHECKINOUT.objects.using('machine').filter(CHECKTIME__date=sel_date).filter(
-                    USERID=em_user_info.USERID).order_by('CHECKTIME')
-                # for c in em_checkInOut:
-                #     em_checkInOut_new = string_to_date(str(c))
-                #     if str(em_checkInOut_new) == str(sel_date):
-                #         em_checkInOut_final.append({
-                #             'employee': em,
-                #             'em_user_info': em_user_info,
-                #             'em_checkInOut': c,
-                #             'em_checkInOut_new': em_checkInOut_new,
-                #             # 'check_In': string_to_time(str(c.first())),
-                #             # 'check_Out': string_to_time(str(c.last()))
-                #         })
-                if em_checkInOut:
-                    w_checkout = str(em_checkInOut.last())
-                    n_w_checkout = w_checkout[:19]
-                    w_checkin = str(em_checkInOut.first())
-                    n_w_checkin = w_checkin[:19]
-                    all_data.append({
-                        'employee': em,
-                        'em_user_info': em_user_info,
-                        'checkinout_date': string_to_date(str(em_checkInOut.first())),
-                        'check_In': string_to_time(str(em_checkInOut.first())),
-                        'check_Out': string_to_time(str(em_checkInOut.last())),
-                        'working_hour': datetime.strptime(n_w_checkout, format) - datetime.strptime(n_w_checkin, format)
-                    })
+                if em_user_info:
+                    em_checkInOut = CHECKINOUT.objects.using('machine').filter(CHECKTIME__date=sel_date).filter(
+                        USERID=em_user_info.USERID).order_by('CHECKTIME')
+                    # for c in em_checkInOut:
+                    #     em_checkInOut_new = string_to_date(str(c))
+                    #     if str(em_checkInOut_new) == str(sel_date):
+                    #         em_checkInOut_final.append({
+                    #             'employee': em,
+                    #             'em_user_info': em_user_info,
+                    #             'em_checkInOut': c,
+                    #             'em_checkInOut_new': em_checkInOut_new,
+                    #             # 'check_In': string_to_time(str(c.first())),
+                    #             # 'check_Out': string_to_time(str(c.last()))
+                    #         })
+                    if em_checkInOut:
+                        w_checkout = str(em_checkInOut.last())
+                        n_w_checkout = w_checkout[:19]
+                        w_checkin = str(em_checkInOut.first())
+                        n_w_checkin = w_checkin[:19]
+                        all_data.append({
+                            'employee': em,
+                            'em_user_info': em_user_info,
+                            'checkinout_date': string_to_date(str(em_checkInOut.first())),
+                            'check_In': string_to_time(str(em_checkInOut.first())),
+                            'check_Out': string_to_time(str(em_checkInOut.last())),
+                            'working_hour': datetime.strptime(n_w_checkout, format) - datetime.strptime(n_w_checkin, format)
+                        })
     # print(all_data)
     context = {
         'all_data': all_data
