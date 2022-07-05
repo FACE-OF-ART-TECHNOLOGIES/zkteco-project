@@ -379,8 +379,7 @@ def check_time(request):
                     em_user_info = USERINFO.objects.using(
                         'machine').get(BADGENUMBER=em.rf_id)
                 except USERINFO.DoesNotExist:
-                    pass
-            
+                    pass          
                 # single_checkInOut = CHECKINOUT.objects.using('machine').filter(date_form=date_form.search_Day, USERID=em_user_info.USERID).order_by('CHECKTIME')
                 # print(single_checkInOut)
                 # em_checkInOut_final = []
@@ -403,13 +402,19 @@ def check_time(request):
                         n_w_checkout = w_checkout[:19]
                         w_checkin = str(em_checkInOut.first())
                         n_w_checkin = w_checkin[:19]
+                        working_hour = datetime.strptime(n_w_checkout, format) - datetime.strptime(n_w_checkin, format)
+                        if n_w_checkout != n_w_checkin and working_hour > timedelta(minutes=480):
+                            over_time = working_hour - timedelta(minutes=480)
+                        else:
+                            over_time = '00:00:00'
                         all_data.append({
                             'employee': em,
                             'em_user_info': em_user_info,
                             'checkinout_date': string_to_date(str(em_checkInOut.first())),
                             'check_In': string_to_time(str(em_checkInOut.first())),
                             'check_Out': string_to_time(str(em_checkInOut.last())),
-                            'working_hour': datetime.strptime(n_w_checkout, format) - datetime.strptime(n_w_checkin, format)
+                            'working_hour': working_hour,
+                            'over_time': over_time
                         })
     # print(all_data)
     context = {
