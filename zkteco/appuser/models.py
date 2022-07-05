@@ -6,12 +6,12 @@ from django.utils import tree
 # Create your models here.
 class HrEmployee(models.Model):
     id = models.AutoField(primary_key=True)
-    rf_id = models.CharField(max_length=100, verbose_name='RFID number', null=True, blank=True)
-    emp_pin = models.TextField()
+    rf_id = models.CharField(max_length=100, verbose_name='RFID number', default=0)
+    emp_pin = models.TextField(default=1 ,blank=True, null=True)
     emp_ssn = models.TextField(blank=True, null=True)
     emp_role = models.TextField(blank=True, null=True)
-    emp_firstname = models.TextField()
-    emp_lastname = models.TextField(blank=True, null=True)
+    emp_firstname = models.TextField(null=True, blank=True)
+    emp_lastname = models.TextField(default='', blank=True, null=True)
     emp_username = models.TextField(blank=True, null=True)
     emp_pwd = models.TextField(blank=True, null=True)
     emp_timezone = models.TextField(blank=True, null=True)
@@ -24,7 +24,7 @@ class HrEmployee(models.Model):
     emp_group = models.TextField(blank=True, null=True)
     emp_hiredate = models.DateTimeField(blank=True, null=True)
     emp_address = models.TextField(blank=True, null=True)
-    emp_active = models.IntegerField()
+    emp_active = models.IntegerField(default='1',null=True, blank=True)
     emp_firedate = models.DateTimeField(blank=True, null=True)
     emp_firereason = models.TextField(blank=True, null=True)
     emp_emergencyphone1 = models.TextField(blank=True, null=True)
@@ -201,6 +201,9 @@ class CHECKINOUT(models.Model):
     class Meta:
         managed = False
         db_table = 'CHECKINOUT'
+
+    def __str__(self):
+        return str(self.CHECKTIME)
 
     
 

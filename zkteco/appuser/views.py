@@ -1,10 +1,13 @@
+from django.db import connections
 from calendar import month
 from datetime import datetime
+from multiprocessing import context
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import date, timedelta
+from .forms import DatewiseView
 
 from appuser.api_functions import apifun_getTodayHourAndOverTime, apifun_getTotalOvertimeMin, apifun_getTotalWorkingMin, \
     apifun_monthlyEarnings
@@ -13,6 +16,7 @@ from .models import USERINFO, EmployeeAdvancePayment, EmployeeSalaryPaments, HrE
 from django.http import HttpResponse, JsonResponse
 from .extra_functions import getCurrentMonth, getLastMonth
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.timezone import make_aware
 
 
 # Create your views here.
@@ -102,7 +106,8 @@ def salary(request):
 
 @login_required(login_url='/login')
 def salaryreports(request):
-    records = EmployeeSalaryPaments.objects.filter().order_by('-paidtime')[0:1000]
+    records = EmployeeSalaryPaments.objects.filter().order_by(
+        '-paidtime')[0:1000]
 
     return render(request, 'apps/dashboard/salary-reports.html', {"records": records})
 
@@ -202,7 +207,8 @@ def payApi(request):
 
     advancepaid = 0
     try:
-        advancepaid = EmployeeAdvancePayment.objects.get(employee=emp, month=lastMonth).advanceamount
+        advancepaid = EmployeeAdvancePayment.objects.get(
+            employee=emp, month=lastMonth).advanceamount
     except:
         pass
 
@@ -213,7 +219,8 @@ def payApi(request):
 
     if getPaymentStatusOfUserPerMonth(user_id, lastMonth) == True:
         print("Salary already Paid")
-        paidinfo = EmployeeSalaryPaments.objects.get(employee=emp, month=lastMonth)
+        paidinfo = EmployeeSalaryPaments.objects.get(
+            employee=emp, month=lastMonth)
 
         isPaid = True
         print("Paid Info", paidinfo.paidtime)
@@ -328,8 +335,6 @@ def advancereports(request):
     return render(request, 'apps/dashboard/advancereports.html', {'advances': advances})
 
 
-from django.db import connections
-
 def fetch_data(request):
 
     # sql = 'Select * From USERINFO'
@@ -342,17 +347,68 @@ def fetch_data(request):
     user_info_all = USERINFO.objects.using('machine').all()
     return HttpResponse(user_info_all)
 
+
+def string_to_date(time_string):
+    new_time_string = time_string[:19]
+    datetime_object = datetime.strptime(
+        new_time_string, "%Y-%m-%d %H:%M:%S").date()
+    return datetime_object
+
+
+def string_to_time(time_string):
+    new_time_string = time_string[:19]
+    datetime_object = datetime.strptime(
+        new_time_string, "%Y-%m-%d %H:%M:%S").time()
+    return datetime_object
+
+
+@csrf_exempt
 @login_required
 def check_time(request):
-    all_user_checkInOut = CHECKINOUT.objects.using('machine').all()
-    user_unique = set()
-    for u in all_user_checkInOut:
-        user_unique.add(u.USERID)
-    
+    global sel_date, check_all_new
+    hr_employee_all = HrEmployee.objects.all()
+
+    # select_form = DatewiseView
+    all_data = []
+    format = "%Y-%m-%d %H:%M:%S"
+    if request.method == "POST":
+        sel_date = request.POST['sel_date']
+        for em in hr_employee_all:
+            if em.rf_id != '0':
+                em_user_info = USERINFO.objects.using(
+                    'machine').get(BADGENUMBER=em.rf_id)
+                # single_checkInOut = CHECKINOUT.objects.using('machine').filter(date_form=date_form.search_Day, USERID=em_user_info.USERID).order_by('CHECKTIME')
+                # print(single_checkInOut)
+                # em_checkInOut_final = []
+                em_checkInOut = CHECKINOUT.objects.using('machine').filter(CHECKTIME__date=sel_date).filter(
+                    USERID=em_user_info.USERID).order_by('CHECKTIME')
+                # for c in em_checkInOut:
+                #     em_checkInOut_new = string_to_date(str(c))
+                #     if str(em_checkInOut_new) == str(sel_date):
+                #         em_checkInOut_final.append({
+                #             'employee': em,
+                #             'em_user_info': em_user_info,
+                #             'em_checkInOut': c,
+                #             'em_checkInOut_new': em_checkInOut_new,
+                #             # 'check_In': string_to_time(str(c.first())),
+                #             # 'check_Out': string_to_time(str(c.last()))
+                #         })
+                if em_checkInOut:
+                    w_checkout = str(em_checkInOut.last())
+                    n_w_checkout = w_checkout[:19]
+                    w_checkin = str(em_checkInOut.first())
+                    n_w_checkin = w_checkin[:19]
+                    all_data.append({
+                        'employee': em,
+                        'em_user_info': em_user_info,
+                        'checkinout_date': string_to_date(str(em_checkInOut.first())),
+                        'check_In': string_to_time(str(em_checkInOut.first())),
+                        'check_Out': string_to_time(str(em_checkInOut.last())),
+                        'working_hour': datetime.strptime(n_w_checkout, format) - datetime.strptime(n_w_checkin, format)
+                    })
+    # print(all_data)
     context = {
-        'all_user_checkInOut': all_user_checkInOut
+        'all_data': all_data
     }
+
     return render(request, 'apps/dashboard/check-in-out.html', context)
-
-
-
